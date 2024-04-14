@@ -1,0 +1,45 @@
+alias: Dog - Food Box Opened Time-Based Feeding
+description: ""
+trigger:
+  - platform: state
+    entity_id: binary_sensor.dog_food_box_door
+    to: "on"
+action:
+  - choose:
+      - conditions:
+          - condition: time
+            after: "04:00:00"
+            before: "10:30:00"
+        sequence:
+          - service: input_boolean.turn_on
+            entity_id: input_boolean.dogmorning
+          - service: input_datetime.set_datetime
+            data:
+              time: "{{ now().strftime('%H:%M:%S') }}"
+            target:
+              entity_id: input_datetime.dog_breakfast_time
+      - conditions:
+          - condition: time
+            after: "11:30:00"
+            before: "15:00:00"
+        sequence:
+          - service: input_boolean.turn_on
+            entity_id: input_boolean.doglunch
+          - service: input_datetime.set_datetime
+            data:
+              time: "{{ now().strftime('%H:%M:%S') }}"
+            target:
+              entity_id: input_datetime.dog_lunch_time
+      - conditions:
+          - condition: time
+            after: "15:00:00"
+            before: "23:00:00"
+        sequence:
+          - service: input_boolean.turn_on
+            entity_id: input_boolean.dogtea
+          - service: input_datetime.set_datetime
+            data:
+              time: "{{ now().strftime('%H:%M:%S') }}"
+            target:
+              entity_id: input_datetime.dog_tea_time
+mode: single
